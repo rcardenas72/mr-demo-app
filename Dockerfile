@@ -2,6 +2,9 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY . .
 RUN dotnet publish DemoApp.Monolitica.Web.csproj -c Release -o /app
+# El csproj usa EnableDefaultContentItems=false (template de NuGet),
+# así que copiamos manualmente lo que falta
+RUN cp -r Views /app/ && cp -r wwwroot /app/ && cp appsettings.json /app/
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
