@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site-layout.css" asp-append-version="true" />
 </head>
@@ -18,6 +19,9 @@
     <div class="wrapper d-flex">
         @await Html.PartialAsync("_Sidebar")
         <div class="content flex-grow-1">
+            <button class="btn btn-sm d-md-none mb-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas" style="background:#444;color:#fff;border:none;">
+                <i class="bi bi-list"></i> Men&uacute;
+            </button>
             @RenderBody()
         </div>
     </div>

@@ -12,10 +12,9 @@
     }
 }
 
-<div class="sidebar">
+<div class="sidebar d-none d-md-block">
     <h5>Navegación</h5>
     <ul class="nav flex-column">
-        <!-- Configuración de Accesos -->
         @if ((permissions?.Any(p => new[] { "Menus", "Permissions", "Roles", "Users", "AuditLogs" }.Contains(p)) ?? false) || isAdmin)
         {
             <li class="nav-item dropdown">
@@ -48,10 +47,7 @@
             </li>
         }
 
-        <!-- Administración (Tablas maestras) -->
-        @if ((permissions?.Any(p => new[] {
-        "Example1"
-        }.Contains(p)) ?? false) || isAdmin)
+        @if ((permissions?.Any(p => new[] { "Example1" }.Contains(p)) ?? false) || isAdmin)
         {
             <li class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle text-start w-100" id="adminDropdown"
@@ -63,12 +59,52 @@
                     {
                         <li><a class="dropdown-item" href="@Url.Action("Index", "Example1")">Example 1</a></li>
                     }
-  
                 </ul>
             </li>
         }
-
-
     </ul>
+</div>
 
+<!-- Offcanvas sidebar for mobile -->
+<div class="offcanvas offcanvas-start d-md-none" tabindex="-1" id="sidebarOffcanvas" aria-labelledby="sidebarOffcanvasLabel" style="background:#292828;color:#fff;">
+    <div class="offcanvas-header" style="border-bottom:1px solid #444;">
+        <h5 class="offcanvas-title" id="sidebarOffcanvasLabel">Navegaci&oacute;n</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body p-0">
+        <ul class="nav flex-column mt-2">
+            @if ((permissions?.Any(p => new[] { "Menus", "Permissions", "Roles", "Users", "AuditLogs" }.Contains(p)) ?? false) || isAdmin)
+            {
+                <li class="nav-item px-3 py-2" style="color:#aaa;font-size:0.8rem;text-transform:uppercase;letter-spacing:1px;">Configuraci&oacute;n de Accesos</li>
+                @if ((permissions?.Contains("AuditLogs") ?? false) || isAdmin)
+                {
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "AuditLogs")" style="color:#fff;" data-bs-dismiss="offcanvas">Auditor&iacute;a</a></li>
+                }
+                @if ((permissions?.Contains("Menus") ?? false) || isAdmin)
+                {
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Menus")" style="color:#fff;" data-bs-dismiss="offcanvas">Men&uacute;s</a></li>
+                }
+                @if ((permissions?.Contains("Permissions") ?? false) || isAdmin)
+                {
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Permissions")" style="color:#fff;" data-bs-dismiss="offcanvas">Permisos</a></li>
+                }
+                @if ((permissions?.Contains("Roles") ?? false) || isAdmin)
+                {
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Roles")" style="color:#fff;" data-bs-dismiss="offcanvas">Roles</a></li>
+                }
+                @if ((permissions?.Contains("Users") ?? false) || isAdmin)
+                {
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Users")" style="color:#fff;" data-bs-dismiss="offcanvas">Usuarios</a></li>
+                }
+            }
+            @if ((permissions?.Any(p => new[] { "Example1" }.Contains(p)) ?? false) || isAdmin)
+            {
+                <li class="nav-item px-3 py-2 mt-2" style="color:#aaa;font-size:0.8rem;text-transform:uppercase;letter-spacing:1px;">Administraci&oacute;n</li>
+                @if ((permissions?.Contains("Example1") ?? false) || isAdmin)
+                {
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Example1")" style="color:#fff;" data-bs-dismiss="offcanvas">Example 1</a></li>
+                }
+            }
+        </ul>
+    </div>
 </div>

@@ -16,11 +16,7 @@
     background-color: #292828;
     padding: 10px;
     color: #fff;
-}
-
-.content {
-    flex: 1;
-    padding: 20px;
+    min-height: calc(100vh - 60px);
 }
 
 .sidebar a {
@@ -34,6 +30,12 @@
         background-color: #444;
         color: #fff;
     }
+
+.content {
+    flex: 1;
+    padding: 20px;
+    min-width: 0; /* evita overflow en flex */
+}
 
 .dropdown-menu {
     background-color: #3b3b3b;
