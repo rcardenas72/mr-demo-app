@@ -1,0 +1,17 @@
+@{
+    ViewData["Title"] = "Iniciar Sesión";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form method="post">
+    <div class="mb-3">
+        <label for="username" class="form-label">Nombre de usuario</label>
+        <input type="text" id="username" name="username" class="form-control" required autofocus />
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <span class="text-danger">@ViewData.ModelState[string.Empty]?.Errors.FirstOrDefault()?.ErrorMessage</span>
+        }
+    </div>
+    <button type="submit" class="btn btn-primary">Ingresar</button>
+</form>

@@ -1,0 +1,21 @@
+version: 2
+updates:
+  - package-ecosystem: "nuget"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    ignore:
+      - dependency-name: "Microsoft.EntityFrameworkCore*"
+        versions: [">=9.0.0"]
+      - dependency-name: "Microsoft.AspNetCore*"
+        versions: [">=9.0.0"]
+      - dependency-name: "Microsoft.Extensions*"
+        versions: [">=9.0.0"]
+      - dependency-name: "Microsoft.Identity.Web*"
+        versions: [">=4.0.0"]
+      - dependency-name: "Serilog.AspNetCore"
+        versions: [">=10.0.0"]
+      - dependency-name: "Pomelo.EntityFrameworkCore.MySql"
+        versions: [">=9.0.0"]

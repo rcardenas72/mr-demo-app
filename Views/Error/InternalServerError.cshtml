@@ -1,0 +1,10 @@
+﻿@{
+    ViewBag.Title = "Error interno";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container text-center mt-5">
+    <h1 class="text-danger">500 - Error interno del servidor</h1>
+    <p class="lead">Hubo un problema procesando tu solicitud. Ya estamos trabajando en ello.</p>
+    <a href="@Url.Action("Index", "Home")" class="btn btn-primary mt-3">Volver al inicio</a>
+</div>

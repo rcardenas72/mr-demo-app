@@ -1,0 +1,34 @@
+﻿@model DemoApp.Web.ViewModels.PermissionFormViewModel
+
+@{
+    ViewData["Title"] = "Eliminar Permiso";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>¿Estás seguro de que deseas eliminar este permiso?</h2>
+
+<div class="mb-3">
+    <strong>Rol:</strong> @Model.RoleName
+</div>
+
+<div class="mb-3">
+    <strong>Menú:</strong> @Model.MenuName
+</div>
+
+<div class="mb-3">
+    <strong>Operación:</strong> @Model.OperationName
+</div>
+
+<div class="mb-3">
+    <strong>Activo:</strong> @(Model.IsActive ? "Sí" : "No")
+</div>
+
+<form asp-action="Delete" method="post">
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+    @Html.HiddenFor(m => m.PermissionId)
+    @Html.HiddenFor(m => m.RoleId)
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a asp-action="Index" asp-route-roleId="@Model.RoleId" class="btn btn-secondary">Cancelar</a>
+</form>
+

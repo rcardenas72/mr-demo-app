@@ -1,0 +1,10 @@
+﻿@{
+    ViewBag.Title = "Error del sistema";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container text-center mt-5">
+    <h1 class="text-danger">Ha ocurrido un error</h1>
+    <p class="lead">Lo sentimos, algo salió mal. Por favor, intenta nuevamente más tarde.</p>
+    <a href="@Url.Action("Index", "Home")" class="btn btn-primary mt-3">Volver al inicio</a>
+</div>

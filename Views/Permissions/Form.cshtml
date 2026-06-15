@@ -1,0 +1,54 @@
+@model DemoApp.Web.ViewModels.PermissionFormViewModel
+
+@{
+    bool isEdit = Model.PermissionId > 0;
+    ViewData["Title"] = isEdit ? "Editar Permiso" : "Crear Permiso";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="@(isEdit ? "Edit" : "Create")" method="post">
+    @Html.AntiForgeryToken()
+    @if (!ViewData.ModelState.IsValid)
+    {
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+    }
+
+    @if (isEdit)
+    {
+        <input type="hidden" asp-for="PermissionId" />
+    }
+
+    <div class="col-md-4 col-sm-6">
+        <label asp-for="RoleId" class="form-label"></label>
+        @Html.DropDownListFor(m => m.RoleId, Model.Roles, "Seleccione un rol", new { @class = "form-control" })
+        <span asp-validation-for="RoleId" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-4 col-sm-6">
+        <label asp-for="MenuId" class="form-label"></label>
+        @Html.DropDownListFor(m => m.MenuId, Model.Menus, "Seleccione un menú", new { @class = "form-control" })
+        <span asp-validation-for="MenuId" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-4 col-sm-6">
+        <label asp-for="OperationType" class="form-label"></label>
+        @Html.DropDownListFor(m => m.OperationType, Model.Operations, "Seleccione una operación", new { @class = "form-control" })
+        <span asp-validation-for="OperationType" class="text-danger"></span>
+    </div>
+
+    <div class="form-check mb-3">
+        <input type="checkbox" asp-for="IsActive" class="form-check-input" />
+        <label asp-for="IsActive" class="form-check-label">Activo</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a asp-action="Index" asp-route-roleId="@Model.RoleId" class="btn btn-secondary">Cancelar</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,32 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site-layout.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="demo-banner text-center py-2" style="background:#5f870e;color:#fff;font-size:0.85rem;font-weight:500;">
+        <i class="bi bi-info-circle me-1"></i> DEMO — Aplicaci&oacute;n de prueba de MR Soluciones Integrales. Los datos se reinician al reiniciar el servidor.
+        <a href="https://www.mrsolucionesint.com" style="color:#fff;text-decoration:underline;margin-left:8px;">Volver al sitio</a>
+    </div>
+    @await Html.PartialAsync("_NavBar")
+    <div class="wrapper d-flex">
+        @await Html.PartialAsync("_Sidebar")
+        <div class="content flex-grow-1">
+            @RenderBody()
+        </div>
+    </div>
+    @await Html.PartialAsync("_Footer")
+
+    <script src="~/lib/jquery/dist/jquery.min.js" nonce="@Context.Items["ScriptNonce"]" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" nonce="@Context.Items["ScriptNonce"]" asp-append-version="true"></script>
+
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>

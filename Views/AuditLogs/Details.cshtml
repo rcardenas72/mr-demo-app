@@ -1,0 +1,90 @@
+﻿@model DemoApp.Web.ViewModels.AuditLogDetailViewModel
+@{
+    ViewData["Title"] = "Detalle de Auditoría";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Detalle de Auditoría</h2>
+
+<table class="table table-bordered table-sm mt-3 w-100">
+    <tbody>
+        <tr>
+            <th style="width: 20%;">Entidad</th>
+            <td>@Model.Log.EntityName</td>
+        </tr>
+        @if (!string.IsNullOrEmpty(Model.Log.EntityId))
+        {
+            <tr>
+                <th>Clave</th>
+                <td><pre>@Model.Log.EntityId</pre></td>
+            </tr>
+        }
+        <tr>
+            <th>Operación</th>
+            <td>@Model.Log.OperationType</td>
+        </tr>
+        <tr>
+            <th>Usuario</th>
+            <td>@Model.Log.PerformedBy</td>
+        </tr>
+        <tr>
+            <th>Fecha</th>
+            <td>@Model.Log.PerformedAt.ToString("yyyy-MM-dd HH:mm:ss")</td>
+        </tr>
+    </tbody>
+</table>
+
+@{
+    var oldValues = string.IsNullOrEmpty(Model.Log.OldValues)
+        ? new Dictionary<string, object?>()
+        : System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object?>>(Model.Log.OldValues);
+
+    var newValues = string.IsNullOrEmpty(Model.Log.NewValues)
+        ? new Dictionary<string, object?>()
+        : System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object?>>(Model.Log.NewValues);
+
+    var allKeys = (oldValues?.Keys ?? Enumerable.Empty<string>())
+               .Union(newValues?.Keys ?? Enumerable.Empty<string>())
+               .Distinct()
+               .OrderBy(k => k);
+}
+
+<h5 class="mt-4">Comparación de Valores</h5>
+
+<table class="table table-bordered table-sm align-middle w-100">
+    <thead class="table-light">
+        <tr>
+            <th style="width: 30%;">Campo</th>
+            <th style="width: 35%;">Valor Anterior</th>
+            <th style="width: 35%;">Valor Nuevo</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var key in allKeys)
+        {
+            var oldValue = oldValues?.ContainsKey(key) == true ? oldValues[key]?.ToString() ?? "[nulo]" : "[n/a]";
+            var newValue = newValues?.ContainsKey(key) == true ? newValues[key]?.ToString() ?? "[nulo]" : "[n/a]";
+            var hasChanged = oldValue != newValue;
+
+            <tr class="@(hasChanged ? "table-warning" : "")">
+                <td>@key</td>
+                <td><pre class="mb-0">@oldValue</pre></td>
+                <td><pre class="mb-0">@newValue</pre></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="mt-4">
+    <a asp-action="Index"
+       asp-route-page="@Model.Page"
+       asp-route-pageSize="@Model.PageSize"
+       asp-route-performedBy="@Model.PerformedBy"
+       asp-route-entityName="@Model.EntityName"
+       asp-route-operationType="@Model.OperationType"
+       asp-route-performedFrom="@Model.PerformedFrom?.ToString("yyyy-MM-dd")"
+       asp-route-performedTo="@Model.PerformedTo?.ToString("yyyy-MM-dd")"
+       class="btn btn-secondary">
+        Volver al Listado
+    </a>
+</div>

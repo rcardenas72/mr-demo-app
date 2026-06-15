@@ -1,0 +1,57 @@
+@model DemoApp.Web.Models.Menu
+
+@{
+    bool isEdit = Model.MenuId > 0;
+    ViewData["Title"] = isEdit ? "Editar Menú" : "Crear Menú";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="@(isEdit ? "Edit" : "Create")" method="post">
+    @Html.AntiForgeryToken()
+    @if (!ViewData.ModelState.IsValid)
+    {
+        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+    }
+
+    @if (isEdit)
+    {
+        <input type="hidden" asp-for="MenuId" />
+    }
+
+    <div class="mb-3 row">
+        <div class="col-md-3">
+            <label asp-for="MenuName" class="form-label"></label>
+            <input asp-for="MenuName" class="form-control" maxlength="150" />
+            <span asp-validation-for="MenuName" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <div class="col-md-3">
+            <label asp-for="ControllerName" class="form-label"></label>
+            <input asp-for="ControllerName" class="form-control" maxlength="50" />
+            <span asp-validation-for="ControllerName" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="mb-3 row">
+        <div class="col-md-3">
+            <label asp-for="EntityName" class="form-label"></label>
+            <input asp-for="EntityName" class="form-control" maxlength="100" />
+            <span asp-validation-for="EntityName" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <button type="submit" class="btn btn-primary">Guardar</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

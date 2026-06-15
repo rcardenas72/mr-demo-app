@@ -1,0 +1,60 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <NoWarn>$(NoWarn);NU5128</NoWarn>
+
+    <!-- Configuración de plantilla -->
+    <IsPackable>true</IsPackable>
+    <PackageType>DemoApp</PackageType>
+    <IncludeContentInPack>true</IncludeContentInPack>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <ContentTargetFolders>content</ContentTargetFolders>
+
+    <!-- Metadata del paquete -->
+    <PackageId>Monolitica.DemoApp</PackageId>
+    <Title>Plantilla Monolítica con .NET Core</Title>
+    <Version>1.1.5</Version>
+    <Authors></Authors>
+    <Description>
+      Una plantilla para crear aplicaciones monolíticas con .NET Core,
+      configurada con una estructura modular y buenas prácticas.
+    </Description>
+    <PackageTags>dotnet-new;demoapp;monolitic</PackageTags>
+
+    <!-- Necesario para que no se excluyan carpetas como Views, wwwroot -->
+    <NoDefaultExcludes>true</NoDefaultExcludes>
+    <EnableDefaultContentItems>false</EnableDefaultContentItems>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+  </PropertyGroup>
+
+  <!-- Incluir absolutamente todo el proyecto -->
+  <ItemGroup>
+    <None Include="**\*" Exclude="bin\**;obj\**;*.nupkg;*.nuspec;**\.gitignore;appsettings.Development.json;**\.vs\**;*.csproj.user;**\.git\**;nupkg\**;.github/workflows/publish-nuget.yml" Pack="true" PackagePath="content" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Riok.Mapperly" Version="4.3.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.28" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.28" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.28">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.28" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.28" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.28">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Identity.Web" Version="3.15.1" />
+    <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="3.15.1" />
+    <PackageReference Include="Microsoft.Identity.Web.UI" Version="3.15.1" />
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.3" />
+    <PackageReference Include="prometheus-net.AspNetCore" Version="8.2.1" />
+    <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
+  </ItemGroup>
+
+</Project>

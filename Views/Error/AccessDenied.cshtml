@@ -1,0 +1,15 @@
+﻿@{
+    ViewBag.Title = "Acceso Denegado";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var message = TempData["AccessDeniedMessage"] as string ?? "No tienes permisos para acceder a esta página o realizar esta acción.";
+}
+
+<div class="container text-center mt-5">
+    <h1 class="text-danger">Acceso Denegado</h1>
+    <p class="lead">@message</p>
+
+    <a href="@Url.Action("Index", "Home")" class="btn btn-primary mt-3">
+        Regresar al Inicio
+    </a>
+</div>

@@ -1,0 +1,198 @@
+﻿@model DemoApp.Web.ViewModels.AuditLogListViewModel
+@using Microsoft.AspNetCore.Mvc.Rendering
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewData["Title"] = "Auditoría del Sistema";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var context = HttpContextAccessor.HttpContext;
+    var isAdmin = context?.Session.GetString("IsAdmin") == "true";
+}
+
+@if (TempData["SuccessMessage"] is string successMsg)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @successMsg
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["ErrorMessage"] is string errorMsg)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @errorMsg
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<h2>Auditoría del Sistema</h2>
+
+<form method="get" asp-action="Index" class="mb-3">
+    <div class="row g-2 align-items-end">
+        <div class="col-md-2">
+            <label class="form-label">Usuario</label>
+            <input type="text" name="performedBy" value="@Model.PerformedBy" class="form-control" placeholder="Usuario que ejecutó" />
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label">Entidad</label>
+            @Html.DropDownList("entityName", Model.EntityOptions ?? new List<SelectListItem>(), "Todas", new { @class = "form-control" })
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label">Operación</label>
+            @Html.DropDownList("operationType", Model.OperationTypeOptions ?? new List<SelectListItem>(), "Todas", new { @class = "form-control" })
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label">Desde</label>
+            <input type="date" name="performedFrom" value="@(Model.PerformedFrom?.ToString("yyyy-MM-dd"))" class="form-control" />
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label">Hasta</label>
+            <input type="date" name="performedTo" value="@(Model.PerformedTo?.ToString("yyyy-MM-dd"))" class="form-control" />
+        </div>
+
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary w-100">Buscar</button>
+        </div>
+    </div>
+</form>
+
+@if (Model.Logs.Any())
+{
+    <table class="table table-bordered table-striped table-sm mt-3">
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>Usuario</th>
+                <th>Entidad</th>
+                <th>Operación</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var log in Model.Logs)
+            {
+                <tr>
+                    <td>@log.PerformedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>@log.PerformedBy</td>
+                    <td>@log.EntityName</td>
+                    <td>
+                        <span class="badge 
+                            @(log.OperationType == "Added" ? "bg-success" :
+                              log.OperationType == "Modified" ? "bg-warning text-dark" :
+                              "bg-danger")">
+                            @log.OperationType
+                        </span>
+                    </td>
+                    <td>
+                        <a asp-action="Details"
+                           asp-route-id="@log.AuditLogId"
+                           asp-route-performedBy="@Model.PerformedBy"
+                           asp-route-entityName="@Model.EntityName"
+                           asp-route-operationType="@Model.OperationType"
+                           asp-route-performedFrom="@(Model.PerformedFrom?.ToString("yyyy-MM-dd"))"
+                           asp-route-performedTo="@(Model.PerformedTo?.ToString("yyyy-MM-dd"))"
+                           asp-route-page="@Model.PageNumber"
+                           asp-route-pageSize="@Model.PageSize"
+                           class="btn btn-sm btn-info">
+                            Ver Detalle
+                        </a>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @if (Model.PagedResult.TotalPages > 1)
+    {
+        var currentPage = Model.PagedResult.CurrentPage;
+        var totalPages = Model.PagedResult.TotalPages;
+        var maxPagesToShow = 20;
+
+        int startPage = Math.Max(1, currentPage - maxPagesToShow / 2);
+        int endPage = Math.Min(totalPages, startPage + maxPagesToShow - 1);
+
+        if (endPage - startPage + 1 < maxPagesToShow && startPage > 1)
+        {
+            startPage = Math.Max(1, endPage - maxPagesToShow + 1);
+        }
+
+        <nav>
+            <ul class="pagination">
+
+                @if (currentPage > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("Index", new {
+                        performedBy = Model.PerformedBy,
+                        entityName = Model.EntityName,
+                        operationType = Model.OperationType,
+                        performedFrom = Model.PerformedFrom?.ToString("yyyy-MM-dd"),
+                        performedTo = Model.PerformedTo?.ToString("yyyy-MM-dd"),
+                        page = currentPage - 1
+                    })">&laquo;</a>
+                    </li>
+                }
+
+                @for (int i = startPage; i <= endPage; i++)
+                {
+                    <li class="page-item @(i == currentPage ? "active" : "")">
+                        <a class="page-link" href="@Url.Action("Index", new {
+                        performedBy = Model.PerformedBy,
+                        entityName = Model.EntityName,
+                        operationType = Model.OperationType,
+                        performedFrom = Model.PerformedFrom?.ToString("yyyy-MM-dd"),
+                        performedTo = Model.PerformedTo?.ToString("yyyy-MM-dd"),
+                        page = i
+                    })">@i</a>
+                    </li>
+                }
+
+                @if (currentPage < totalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("Index", new {
+                        performedBy = Model.PerformedBy,
+                        entityName = Model.EntityName,
+                        operationType = Model.OperationType,
+                        performedFrom = Model.PerformedFrom?.ToString("yyyy-MM-dd"),
+                        performedTo = Model.PerformedTo?.ToString("yyyy-MM-dd"),
+                        page = currentPage + 1
+                    })">&raquo;</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+    <div class="mb-3 d-flex gap-2">
+        <form method="get" asp-action="Export">
+            <input type="hidden" name="performedBy" value="@Model.PerformedBy" />
+            <input type="hidden" name="entityName" value="@Model.EntityName" />
+            <input type="hidden" name="operationType" value="@Model.OperationType" />
+            <input type="hidden" name="performedFrom" value="@(Model.PerformedFrom?.ToString("yyyy-MM-dd"))" />
+            <input type="hidden" name="performedTo" value="@(Model.PerformedTo?.ToString("yyyy-MM-dd"))" />
+            <button type="submit" class="btn btn-outline-success">
+                Exportar CSV
+            </button>
+        </form>
+
+        @if (isAdmin)
+        {
+            <form method="post" asp-action="Purge" onsubmit="return confirm('¿Está seguro de purgar TODOS los registros de auditoría? Esta acción no se puede deshacer.');">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-outline-danger">
+                    Purgar todo
+                </button>
+            </form>
+        }
+    </div>
+
+}
+else
+{
+    <p class="mt-4">No se encontraron registros con los filtros aplicados.</p>
+}

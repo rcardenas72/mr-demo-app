@@ -1,0 +1,118 @@
+﻿@model DemoApp.Web.ViewModels.UserFilterViewModel
+@using Microsoft.AspNetCore.Mvc.Rendering
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewData["Title"] = "Usuarios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var context = HttpContextAccessor.HttpContext;
+    var isAdmin = context?.Session.GetString("IsAdmin") == "true";
+
+    bool HasPermission(string key) =>
+        (context?.Items[key] as bool? == true) || isAdmin;
+
+}
+
+<h2>Usuarios</h2>
+
+<form method="get" asp-action="Index" class="mb-3">
+    <div class="row g-2 align-items-end">
+        <div class="col-md-4">
+            <label class="form-label">Buscar</label>
+            <input type="text" name="searchTerm" value="@Model.SearchTerm" class="form-control" placeholder="Nombre, usuario o email" />
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">Rol</label>
+            @Html.DropDownList("roleId", Model.Roles ?? new List<SelectListItem>(), "Todos", new { @class = "form-control" })
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">Estado</label>
+            <select asp-for="IsActive" class="form-control">
+                <option value="">Todos</option>
+                <option value="true">Activo</option>
+                <option value="false">Inactivo</option>
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Buscar</button>
+        </div>
+    </div>
+</form>
+
+@if (Model.Users.Any())
+{
+    <table class="table table-bordered table-striped table-sm">
+        <thead>
+            <tr>
+                <th>Usuario</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Rol</th>
+                <th>Admin</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model.Users)
+            {
+                <tr>
+                    <td>@user.UserName</td>
+                    <td>@user.FullName</td>
+                    <td>@user.Email</td>
+                    <td>@user.RoleName</td>
+                    <td>@(user.IsAdmin ? "Sí" : "No")</td>
+                    <td>
+                        @if (user.IsActive)
+                        {
+                            <span class="badge bg-success">Activo</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Inactivo</span>
+                        }
+                    </td>
+                    <td>
+                        @if (HasPermission("CanEdit"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@user.UserId" class="btn btn-sm btn-warning">Editar</a>
+                            @*  <a asp-action="Delete" asp-route-id="@user.UserId" class="btn btn-sm btn-danger">Eliminar</a> *@                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @if (Model.TotalPages > 1)
+    {
+        <nav>
+            <ul class="pagination">
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                        <a class="page-link" href="@Url.Action("Index", new {
+                        searchTerm = Model.SearchTerm,
+                        roleId = Model.RoleId,
+                        isActive = Model.IsActive,
+                        page = i
+                    })">@i</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+
+}
+else
+{
+    <p>No se encontraron usuarios con los criterios ingresados.</p>
+}
+@if (HasPermission("CanAdd"))
+{
+    <div class="mb-3">
+        <a asp-action="Create" class="btn btn-success">Crear Nuevo Usuario</a>
+    </div>
+}

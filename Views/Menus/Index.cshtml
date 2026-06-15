@@ -1,0 +1,75 @@
+﻿@using DemoApp.Web.Models
+@using DemoApp.Web.ViewModels
+@model PagedResultViewModel<Menu>
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewData["Title"] = "Administrar Menus";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var context = HttpContextAccessor.HttpContext;
+    var isAdmin = context?.Session.GetString("IsAdmin") == "true";
+
+    bool HasPermission(string key) =>
+        (context?.Items[key] as bool? == true) || isAdmin;
+}
+
+<h2>Administrar Menus</h2>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Controlador</th>
+                        <th>Entidad</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var menu in Model.Items)
+                    {
+                        <tr>
+                            <td>@menu.MenuName</td>
+                            <td>@menu.ControllerName</td>
+                            <td>@(string.IsNullOrWhiteSpace(menu.EntityName) ? "-" : menu.EntityName)</td> 
+                            <td>
+                                @if (HasPermission("CanEdit"))
+                                {
+                                    <a asp-action="Edit" asp-controller="Menus" asp-route-id="@menu.MenuId" class="btn btn-warning btn-sm">
+                                        Editar
+                                    </a>
+                                }
+
+                                @if (HasPermission("CanDelete"))
+                                {
+                                    <a asp-action="Delete" asp-controller="Menus" asp-route-id="@menu.MenuId" class="btn btn-danger btn-sm">
+                                        Eliminar
+                                    </a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <!-- Paginación -->
+        <nav aria-label="Paginación">
+            <ul class="pagination">
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-page="@i">@i</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+</div>
+
+@if (HasPermission("CanAdd"))
+{
+    <a asp-action="Create" asp-controller="Menus" class="btn btn-primary">Crear Nuevo Menu</a>
+}

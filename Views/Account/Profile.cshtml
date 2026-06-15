@@ -1,0 +1,34 @@
+﻿@model DemoApp.Web.Models.AppUser
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Perfil de Usuario";
+}
+
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Perfil de Usuario</h4>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Nombre completo</dt>
+                <dd class="col-sm-9">@Model.FullName</dd>
+
+                <dt class="col-sm-3">Correo electrónico</dt>
+                <dd class="col-sm-9">@Model.Email</dd>
+
+                <dt class="col-sm-3">Rol</dt>
+                <dd class="col-sm-9">@Model.RoleName</dd>
+
+                <dt class="col-sm-3">¿Es administrador?</dt>
+                <dd class="col-sm-9">@(Model.IsAdmin ? "Sí" : "No")</dd>
+
+                <dt class="col-sm-3">Activo</dt>
+                <dd class="col-sm-9">@(Model.IsActive ? "Sí" : "No")</dd>
+            </dl>
+        </div>
+        <div class="card-footer">
+            <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Volver</a>
+        </div>
+    </div>
+</div>

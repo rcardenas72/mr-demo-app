@@ -1,0 +1,11 @@
+﻿@{
+    ViewBag.Title = "Sesión inválida";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container text-center mt-5">
+    <h1 class="text-warning">Token inválido o expirado</h1>
+    <p class="lead">Tu sesión ha expirado o el acceso no es válido. Por favor, vuelve a iniciar sesión.</p>
+
+    <a href="/MicrosoftIdentity/Account/SignIn" class="btn btn-primary mt-3">Iniciar sesión</a>
+</div>

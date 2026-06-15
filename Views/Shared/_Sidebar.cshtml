@@ -1,0 +1,74 @@
+﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using DemoApp.Web.Helpers 
+@{
+    var context = HttpContextAccessor.HttpContext;
+    bool isAdmin = false;
+    List<string>? permissions = null;
+
+    if (context != null)
+    {
+        isAdmin = UserPermissionHelper.IsAdmin(context);
+        permissions = UserPermissionHelper.GetPermissions(context);
+    }
+}
+
+<div class="sidebar">
+    <h5>Navegación</h5>
+    <ul class="nav flex-column">
+        <!-- Configuración de Accesos -->
+        @if ((permissions?.Any(p => new[] { "Menus", "Permissions", "Roles", "Users", "AuditLogs" }.Contains(p)) ?? false) || isAdmin)
+        {
+            <li class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle text-start w-100" id="accessconfigurationDropdown"
+                        data-bs-toggle="dropdown" aria-expanded="false" type="button">
+                    Configuración de Accesos
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="accessconfigurationDropdown">
+                    @if ((permissions?.Contains("AuditLogs") ?? false) || isAdmin)
+                    {
+                        <li><a class="dropdown-item" href="@Url.Action("Index", "AuditLogs")">Auditoría</a></li>
+                    }
+                    @if ((permissions?.Contains("Menus") ?? false) || isAdmin)
+                    {
+                        <li><a class="dropdown-item" href="@Url.Action("Index", "Menus")">Menús</a></li>
+                    }
+                    @if ((permissions?.Contains("Permissions") ?? false) || isAdmin)
+                    {
+                        <li><a class="dropdown-item" href="@Url.Action("Index", "Permissions")">Permisos</a></li>
+                    }
+                    @if ((permissions?.Contains("Roles") ?? false) || isAdmin)
+                    {
+                        <li><a class="dropdown-item" href="@Url.Action("Index", "Roles")">Roles</a></li>
+                    }
+                    @if ((permissions?.Contains("Users") ?? false) || isAdmin)
+                    {
+                        <li><a class="dropdown-item" href="@Url.Action("Index", "Users")">Usuarios</a></li>
+                    }
+                </ul>
+            </li>
+        }
+
+        <!-- Administración (Tablas maestras) -->
+        @if ((permissions?.Any(p => new[] {
+        "Example1"
+        }.Contains(p)) ?? false) || isAdmin)
+        {
+            <li class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle text-start w-100" id="adminDropdown"
+                        data-bs-toggle="dropdown" aria-expanded="false" type="button">
+                    Administración
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                    @if ((permissions?.Contains("Example1") ?? false) || isAdmin)
+                    {
+                        <li><a class="dropdown-item" href="@Url.Action("Index", "Example1")">Example 1</a></li>
+                    }
+  
+                </ul>
+            </li>
+        }
+
+
+    </ul>
+
+</div>

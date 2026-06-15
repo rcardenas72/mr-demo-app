@@ -1,0 +1,84 @@
+﻿@using Microsoft.AspNetCore.Mvc.Rendering
+@using DemoApp.Web.Models
+@using DemoApp.Web.ViewModels
+@model PermissionIndexViewModel
+
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    ViewData["Title"] = "Permisos por Rol";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var context = HttpContextAccessor.HttpContext;
+    var isAdmin = context?.Session.GetString("IsAdmin") == "true";
+
+    bool HasPermission(string key) =>
+        (context?.Items[key] as bool? == true) || isAdmin;
+}
+
+<h2>Permisos por Rol</h2>
+
+<form method="get" asp-action="Index" class="mb-3">
+    <div class="row g-2 align-items-end">
+        <div class="col-md-4 col-sm-6">
+            @Html.DropDownList("roleId", Model.Roles, "Seleccione un rol", new { @class = "form-control" })
+        </div>
+        <div class="col-md-auto">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+        </div>
+    </div>
+</form>
+
+@if (Model.PagedPermissions.Items.Any())
+{
+    <table class="table table-bordered table-striped table-sm">
+        <thead>
+            <tr>
+                <th>Menú</th>
+                <th>Operación</th>
+                <th>Activo</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model.PagedPermissions.Items)
+            {
+                <tr>
+                    <td>@p.Menu?.MenuName</td>
+                    <td>@p.OperationType</td>
+                    <td>@(p.IsActive ? "Sí" : "No")</td>
+                    <td>
+                        @if (HasPermission("CanEdit"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@p.PermissionId" class="btn btn-warning btn-sm">Editar</a>
+                        }
+                        @if (HasPermission("CanDelete"))
+                        {
+                            <a asp-action="Delete" asp-route-id="@p.PermissionId" class="btn btn-danger btn-sm">Eliminar</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <nav aria-label="Paginación">
+        <ul class="pagination">
+            @for (int i = 1; i <= Model.PagedPermissions.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PagedPermissions.CurrentPage ? "active" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-roleId="@Model.SelectedRoleId" asp-route-page="@i">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}
+else if (Model.SelectedRoleId != null)
+{
+    <p>No se encontraron permisos para el rol seleccionado.</p>
+}
+
+@if (HasPermission("CanAdd") && Model.SelectedRoleId > 0)
+{
+    <a asp-action="Create" asp-route-roleId="@Model.SelectedRoleId" class="btn btn-success mb-3">Crear Nuevo Permiso</a>
+}
