@@ -7,7 +7,7 @@
 <form method="post">
     <div class="mb-3">
         <label for="username" class="form-label">Nombre de usuario</label>
-        <input type="text" id="username" name="username" class="form-control" required autofocus />
+        <input type="text" id="username" name="username" class="form-control" value="demo" required autofocus />
         @if (!ViewData.ModelState.IsValid)
         {
             <span class="text-danger">@ViewData.ModelState[string.Empty]?.Errors.FirstOrDefault()?.ErrorMessage</span>
