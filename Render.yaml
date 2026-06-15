@@ -1,7 +1,5 @@
 services:
   - type: web
     name: mr-demo-app
-    runtime: dotnet
-    buildCommand: dotnet publish -c Release -o out
-    startCommand: dotnet out/DemoApp.Monolitica.Web.dll
+    env: docker
     plan: free
