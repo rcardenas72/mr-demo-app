@@ -78,23 +78,23 @@
                 <li class="nav-item px-3 py-2" style="color:#aaa;font-size:0.8rem;text-transform:uppercase;letter-spacing:1px;">Configuraci&oacute;n de Accesos</li>
                 @if ((permissions?.Contains("AuditLogs") ?? false) || isAdmin)
                 {
-                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "AuditLogs")" style="color:#fff;" data-bs-dismiss="offcanvas">Auditor&iacute;a</a></li>
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "AuditLogs")" style="color:#fff;">Auditor&iacute;a</a></li>
                 }
                 @if ((permissions?.Contains("Menus") ?? false) || isAdmin)
                 {
-                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Menus")" style="color:#fff;" data-bs-dismiss="offcanvas">Men&uacute;s</a></li>
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Menus")" style="color:#fff;">Men&uacute;s</a></li>
                 }
                 @if ((permissions?.Contains("Permissions") ?? false) || isAdmin)
                 {
-                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Permissions")" style="color:#fff;" data-bs-dismiss="offcanvas">Permisos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Permissions")" style="color:#fff;">Permisos</a></li>
                 }
                 @if ((permissions?.Contains("Roles") ?? false) || isAdmin)
                 {
-                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Roles")" style="color:#fff;" data-bs-dismiss="offcanvas">Roles</a></li>
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Roles")" style="color:#fff;">Roles</a></li>
                 }
                 @if ((permissions?.Contains("Users") ?? false) || isAdmin)
                 {
-                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Users")" style="color:#fff;" data-bs-dismiss="offcanvas">Usuarios</a></li>
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Users")" style="color:#fff;">Usuarios</a></li>
                 }
             }
             @if ((permissions?.Any(p => new[] { "Example1" }.Contains(p)) ?? false) || isAdmin)
@@ -102,7 +102,7 @@
                 <li class="nav-item px-3 py-2 mt-2" style="color:#aaa;font-size:0.8rem;text-transform:uppercase;letter-spacing:1px;">Administraci&oacute;n</li>
                 @if ((permissions?.Contains("Example1") ?? false) || isAdmin)
                 {
-                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Example1")" style="color:#fff;" data-bs-dismiss="offcanvas">Example 1</a></li>
+                    <li class="nav-item"><a class="nav-link" href="@Url.Action("Index", "Example1")" style="color:#fff;">Example 1</a></li>
                 }
             }
         </ul>
