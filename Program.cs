@@ -111,14 +111,11 @@ builder.Services.AddDbContext<AppDbContext>((provider, options) =>
 builder.Services.AddMetrics(); // para exponer metricas a prometeus
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+// EnsureCreated + seed data se ejecuta siempre (no solo en Development)
+using (var scope = app.Services.CreateScope())
 {
-    app.MapGet("/env", () => $"Environment: {app.Environment.EnvironmentName}");
-    using (var scope = app.Services.CreateScope())
-    {
-        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        await dbContext.Database.EnsureCreatedAsync();
-    }
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await dbContext.Database.EnsureCreatedAsync();
 }
 
 app.UseHttpsRedirection();
